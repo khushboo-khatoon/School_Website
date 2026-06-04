@@ -5,18 +5,26 @@ import "react-calendar/dist/Calendar.css";
 import events from "../data/events";
 
 const roles = ["student", "teacher", "staff"];
+const getDaysLeft = (eventDate) => {
+  const today = new Date();
+  const targetDate = new Date(eventDate);
+
+  const difference = targetDate - today;
+
+  return Math.ceil(difference / (1000 * 60 * 60 * 24));
+};
 
 const EventCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [currentRole, setCurrentRole] = useState("student");
 
-  const filteredEvents = events.filter(
-    (event) => event.role === currentRole
-  );
+  const filteredEvents = events.filter((event) => event.role === currentRole);
+  const upcomingEvent = filteredEvents
+    .filter((event) => getDaysLeft(event.date) >= 0)
+    .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 px-6 py-10">
-      
       {/* Heading */}
       <h1 className="text-3xl sm:text-5xl font-bold text-center text-blue-700 mb-4">
         Event Calendar
@@ -43,10 +51,50 @@ const EventCalendar = () => {
         ))}
       </div>
 
+      <div className="text-center mb-8">
+        <p className="text-xl font-semibold text-gray-700">
+          Total Upcoming Events: {filteredEvents.length}
+        </p>
+      </div>
+
+      {upcomingEvent && (
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="bg-gradient-to-r from-yellow-100 to-orange-100 border-l-4 border-yellow-500 p-6 rounded-2xl shadow-lg">
+            <h2 className="text-2xl font-bold text-yellow-800 mb-2">
+              🌟 Upcoming Event
+            </h2>
+
+            <h3 className="text-xl font-semibold text-gray-800">
+              {upcomingEvent.title}
+            </h3>
+
+            <p className="text-gray-600 mt-1">📅 {upcomingEvent.date}</p>
+
+            <p className="text-gray-700 mt-2">{upcomingEvent.description}</p>
+
+            <div className="mt-4 inline-block bg-red-500 text-white px-4 py-2 rounded-full font-bold">
+              ⏳ {getDaysLeft(upcomingEvent.date)} Days Remaining
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Calendar Section */}
       <div className="flex justify-center mb-16 sm:mb-32 mt-6">
         <div className="bg-white p-4 sm:p-8 rounded-3xl shadow-2xl border border-blue-100 sm:scale-125">
-          <Calendar onChange={setDate} value={date} />
+          <Calendar
+            onChange={setDate}
+            value={date}
+            tileClassName={({ date }) => {
+              const formattedDate = date.toISOString().split("T")[0];
+
+              const hasEvent = filteredEvents.some(
+                (event) => event.date === formattedDate,
+              );
+
+              return hasEvent ? "bg-yellow-300 rounded-full" : null;
+            }}
+          />
         </div>
       </div>
 
@@ -69,14 +117,16 @@ const EventCalendar = () => {
             </div>
 
             {/* Date */}
-            <p className="text-gray-500 mb-3 text-lg">
-              📅 {event.date}
-            </p>
+            <div className="flex justify-between items-center mb-3">
+              <p className="text-gray-500 text-lg">📅 {event.date}</p>
+
+              <span className="bg-red-100 text-red-600 text-sm font-semibold px-3 py-1 rounded-full">
+                ⏳ {getDaysLeft(event.date)} Days Left
+              </span>
+            </div>
 
             {/* Description */}
-            <p className="text-gray-700 leading-relaxed">
-              {event.description}
-            </p>
+            <p className="text-gray-700 leading-relaxed">{event.description}</p>
           </div>
         ))}
       </div>
