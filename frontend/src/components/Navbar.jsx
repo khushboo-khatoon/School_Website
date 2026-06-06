@@ -48,7 +48,7 @@ const Navbar = () => {
             <div className="flex items-center">
               <Link to="/" className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-[var(--bg-primary)] rounded-lg flex items-center justify-center">
-                  <span className="text-blue-600 font-bold text-xl">E</span>
+                  <span className="text-blue-600 font-bold text-xl">🎓</span>
                 </div>
                 {/* Logo text changed to white for contrast */}
                 <span className="text-xl font-bold text-white tracking-tight">
