@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { Moon, Sun } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const { theme, toggleTheme } = useTheme();
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
-    { name: 'Teacher', path: '/teacher' },
+    { name: "Teacher", path: "/teacher" },
     { name: "Academics", path: "/academics" },
     { name: "Contact", path: "/contact" },
     { name: "Calendar", path: "/calendar" },
@@ -42,6 +44,7 @@ const Navbar = () => {
 
       {/* Changed bg-white to bg-blue-600 and updated border */}
       <nav className="bg-blue-600 border-b border-blue-500 fixed top-0 left-0 w-full z-50 shadow-lg">
+      <nav className="bg-blue-600 border-b border-blue-500 sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             {/* Logo Section */}
@@ -49,17 +52,20 @@ const Navbar = () => {
               <Link to="/" className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-[var(--bg-primary)] rounded-lg flex items-center justify-center">
                   <span className="text-blue-600 font-bold text-xl">🎓</span>
+              <NavLink to="/" className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                  <span className="text-blue-600 font-bold text-xl">E</span>
                 </div>
-                {/* Logo text changed to white for contrast */}
                 <span className="text-xl font-bold text-white tracking-tight">
                   EduStream
                 </span>
-              </Link>
+              </NavLink>
             </div>
 
-            {/* Desktop Links - Changed text color to white */}
+            {/* Desktop Links - WITH SMOOTH UNDERLINE TRANSITION */}
             <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
               {navLinks.map((link) => (
+ homepage-redesign-uiux
                 <Link
                   key={link.name}
                   to={link.path}
@@ -87,48 +93,26 @@ const Navbar = () => {
                         strokeLinejoin="round"
                         strokeWidth="2"
                         d="M19 9l-7 7-7-7"
+
+                <NavLink key={link.name} to={link.path}>
+                  {({ isActive }) => (
+                    <div className="relative pb-1 group">
+                      <span
+                        className={`font-medium transition-colors duration-300 ${
+                          isActive ? "text-white" : "text-blue-50 group-hover:text-white"
+                        }`}
+                      >
+                        {link.name}
+                      </span>
+                      <span
+                        className={`absolute bottom-0 left-0 w-full h-0.5 bg-white transition-transform duration-300 ease-out ${
+                          isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                        }`}
                       />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Dropdown Menu (Stays White for readability) */}
-                <div className="absolute right-0 mt-3 w-52 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-2">
-                  <div className="relative group/sub">
-                    <div className="px-4 py-2.5 text-slate-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer flex justify-between items-center font-medium">
-                      Sign In <span className="text-[10px] opacity-50">▶</span>
                     </div>
-                    <div className="absolute left-full top-0 ml-1 w-44 bg-[var(--bg-primary)] border border-slate-100 rounded-xl shadow-xl opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all py-2">
-                      {roles.map((role) => (
-                        <Link
-                          key={`in-${role.name}`}
-                          to={`/login${role.path}`}
-                          className="block px-4 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-600"
-                        >
-                          As {role.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative group/sub">
-                    <div className="px-4 py-2.5 text-slate-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer flex justify-between items-center font-medium border-t border-slate-50">
-                      Sign Up <span className="text-[10px] opacity-50">▶</span>
-                    </div>
-                    <div className="absolute left-full top-0 ml-1 w-44 bg-[var(--bg-primary)] border border-slate-100 rounded-xl shadow-xl opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all py-2">
-                      {roles.map((role) => (
-                        <Link
-                          key={`up-${role.name}`}
-                          to={`/register${role.path}`}
-                          className="block px-4 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-600"
-                        >
-                          Register as {role.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  )}
+                </NavLink>
+              ))}
             </div>
 
 
@@ -144,11 +128,17 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* Mobile Menu Button - Changed to white */}
+
+            {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="text-white focus:outline-none"
+                aria-label={
+                  isOpen ? "Close navigation menu" : "Open navigation menu"
+                }
+                aria-expanded={isOpen}
+                aria-controls="mobile-menu"
+                className="text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
               >
                 <svg
                   className="h-7 w-7"
@@ -176,74 +166,31 @@ const Navbar = () => {
             </div>
           </div>
 
+
         </div>
 
-        {/* Mobile Menu Dropdown - Matching Blue Theme */}
+        {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden bg-blue-700 border-t border-blue-500 py-4 px-4 space-y-1">
+          <div
+            id="mobile-menu"
+            className="md:hidden bg-blue-700 border-t border-blue-500 py-4 px-4 space-y-1"
+          >
             {navLinks.map((link) => (
-              <Link
+              <NavLink
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className="block px-3 py-2 rounded-md text-base font-medium text-blue-50 hover:bg-blue-600"
+                className={({ isActive }) =>
+                  `block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 ${
+                    isActive
+                      ? "bg-blue-800 text-white border-l-4 border-white"
+                      : "text-blue-50 hover:bg-blue-600"
+                  }`
+                }
               >
                 {link.name}
-              </Link>
+              </NavLink>
             ))}
-
-            <button
-              className="theme-toggle ml-3 text-2xl flex items-center justify-center"
-              onClick={toggleTheme}
-              aria-label="Toggle Theme"
-            >
-              {theme === "light" ? "🌙" : "☀️"}
-            </button>
-            <div className="pt-4 mt-2 border-t border-blue-500">
-              <button
-                onClick={() =>
-                  setActiveDropdown(
-                    activeDropdown === "signin" ? null : "signin",
-                  )
-                }
-                className="w-full text-left px-3 py-2 text-base font-bold text-white flex justify-between items-center"
-              >
-                SIGN IN <span>{activeDropdown === "signin" ? "−" : "+"}</span>
-              </button>
-              {activeDropdown === "signin" &&
-                roles.map((role) => (
-                  <Link
-                    key={`m-in-${role.name}`}
-                    to={`/login${role.path}`}
-                    onClick={() => setIsOpen(false)}
-                    className="block pl-8 py-2 text-blue-100 text-sm hover:text-white"
-                  >
-                    Login as {role.name}
-                  </Link>
-                ))}
-
-              <button
-                onClick={() =>
-                  setActiveDropdown(
-                    activeDropdown === "signup" ? null : "signup",
-                  )
-                }
-                className="w-full text-left px-3 py-2 text-base font-bold text-white flex justify-between items-center mt-2"
-              >
-                SIGN UP <span>{activeDropdown === "signup" ? "−" : "+"}</span>
-              </button>
-              {activeDropdown === "signup" &&
-                roles.map((role) => (
-                  <Link
-                    key={`m-up-${role.name}`}
-                    to={`/register${role.path}`}
-                    onClick={() => setIsOpen(false)}
-                    className="block pl-8 py-2 text-blue-100 text-sm hover:text-white"
-                  >
-                    Register as {role.name}
-                  </Link>
-                ))}
-            </div>
           </div>
         )}
       </nav>
