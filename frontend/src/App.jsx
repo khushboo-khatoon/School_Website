@@ -23,6 +23,7 @@ import Scholarship from "./pages/Scholarship";
 import Gallery from "./pages/Gallery";
 import Student from "./pages/Student";
 import DownloadProspectus from "./pages/DownloadProspectus";
+import StudentManagement from "./pages/StudentManagement";
 
 /**
  * ScrollToTop ensures that every time a user navigates to a new page,
@@ -63,6 +64,7 @@ const App = () => {
             <Route path="/admissions/scholarship" element={<Scholarship />} />
             <Route path="/prospectus" element={<DownloadProspectus />} /> 
             <Route path="/student" element={<Student />} />
+            <Route path="/student-management" element={<StudentManagement />} />
             
             {/* Catch-all route for 404 Page Not Found */}
             <Route path="*" element={<NotFound />} />

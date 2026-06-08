@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@tailwindcss/postcss": "^4.3.0",
     "@tailwindcss/vite": "^4.1.18",
     "axios": "^1.13.2",
+    "file-saver": "^2.0.5",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-calendar": "^6.0.1",
