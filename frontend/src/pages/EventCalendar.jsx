@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 import events from "../data/events";
 
@@ -18,6 +20,8 @@ const getDaysLeft = (eventDate) => {
 const EventCalendar = () => {
   const [date, setDate] = useState(new Date());
   const [currentRole, setCurrentRole] = useState("student");
+  const exportPDF = () => {
+    const doc = new jsPDF();
 
   const filteredEvents = events.filter((event) => event.role === currentRole);
   const selectedDate = date.toISOString().split("T")[0];
@@ -38,6 +42,15 @@ const EventCalendar = () => {
       <p className="text-center text-gray-600 text-lg mb-10">
         View upcoming events, deadlines, and important schedules
       </p>
+
+      <div className="flex justify-center mb-8">
+        <button
+          onClick={exportPDF}
+          className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:bg-green-700 transition"
+        >
+          Export to PDF
+        </button>
+      </div>
 
       {/* Role Buttons */}
       <div className="flex justify-center gap-4 mb-16 flex-wrap">
